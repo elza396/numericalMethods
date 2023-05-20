@@ -19,8 +19,8 @@ const labFunction = () =>  {
     }
 
     const getSpans = () => {
-        if (functionBy(spanA) * getSecondDerivative(spanA)) {
-            return [spanA, spanB]
+        if (functionBy(spanA) * getSecondDerivative(spanA) > 0) {
+            return [spanA, spanB] // первое значение неподвижно
         } else {
             return [spanB, spanA]
         }
@@ -32,18 +32,20 @@ const labFunction = () =>  {
     let c;
 
     // HalfDivisionMethod
-    while (Math.abs(b - a) >= eps) {
+    while (Math.abs(b - a) >= eps) { // Math.abs - модуль
+        counter++;
         c = (a + b) / 2;
-        if (functionBy(a) * functionBy(c) < 0) {
+        if (functionBy(c) === 0) { // если f(x0) = 0, то х0 - искомый корень
+            break;
+        } if (functionBy(a) * functionBy(c) < 0) {
             b = c;
         } else {
             a = c;
         }
-        counter++;
     }
 
     const halfDivisionTds = document.querySelectorAll(".halfDivision > *");
-    halfDivisionTds[1].innerHTML = `${spanA}, ${spanB}, ${spanA}`;
+    halfDivisionTds[1].innerHTML = `${spanA}, ${spanB}, ${(spanA + spanB) /2}`;
     halfDivisionTds[2].innerHTML = `${c}`;
     halfDivisionTds[3].innerHTML = `${counter}`;
 
@@ -55,7 +57,7 @@ const labFunction = () =>  {
     const chordMethodTds = document.querySelectorAll(".chordMethod > *");
     chordMethodTds[1].innerHTML = `${spanA}, ${spanB}, ${xCurr}`;
 
-    while (Math.abs(xCurr - xFixed) >= eps) {
+    while (Math.abs(xFixed - xCurr) >= eps) {
         xNext = xFixed - functionBy(xFixed) * (xCurr - xFixed) / (functionBy(xCurr) - functionBy(xFixed));
         xCurr = xFixed;
         xFixed = xNext;
@@ -72,7 +74,7 @@ const labFunction = () =>  {
     const tangentMethodTds = document.querySelectorAll(".tangentMethod > *");
     tangentMethodTds[1].innerHTML = `${spanA}, ${spanB}, ${firstX}`;
 
-    while (Math.abs(lastX - firstX) >= eps) {
+    while (Math.abs(firstX - lastX) >= eps) {
         xNext = firstX - functionBy(firstX)/getDerivative(firstX);
         lastX = firstX;
         firstX = xNext;
@@ -100,6 +102,30 @@ const labFunction = () =>  {
 
     combinedMethodTds[2].innerHTML = `${aNext}, ${bNext}`;
     combinedMethodTds[3].innerHTML = `${counter}`;
+
+    // Iteration Method
+    counter = 0;
+    [a, b] = getSpans();
+    let tmp;
+
+    const qMax = Math.max(getDerivative(a), getDerivative(b));
+    const k = Math.ceil(qMax/2); // округление до целого числа в большую сторону
+
+    const iterationMethodTds = document.querySelectorAll(".iterationMethod > *");
+    iterationMethodTds[1].innerHTML = `${spanA}, ${spanB}, ${a}`; // начальное выбираем любое значение из интервала
+
+    c = a - functionBy(a)/k; // первая итерация
+    tmp = a;
+    counter++;
+
+    while (Math.abs(c - tmp) >= eps && counter < 100) {
+        tmp = c;
+        c = c - functionBy(c)/k;
+        counter++;
+    }
+
+    iterationMethodTds[2].innerHTML = `${c}`;
+    iterationMethodTds[3].innerHTML = `${counter}`;
 }
 
 document.addEventListener("DOMContentLoaded", labFunction);
