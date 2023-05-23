@@ -7,3 +7,9 @@
 th, td {
     border: solid 1px black;
 }
+.variant {
+    height: 50px;
+    object-fit: fill;
+    background: url("./res/variant.png") no-repeat;
+    background-size: contain;
+}
