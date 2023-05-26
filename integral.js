@@ -4,8 +4,7 @@ const labFunction = () =>  {
     const mN = 1.6;
     const n = 10;
 
-    // Квадратурные коэффициенты Гаусса
-    const CForGauss = [
+    const CForGauss = [ // Квадратурные коэффициенты Гаусса
         [2],
         [1, 1],
         [5/9, 8/9, 5/9],
@@ -42,7 +41,7 @@ const labFunction = () =>  {
             localN *= 2;
             const res = method(m0, mN, localN);
             flag = Math.abs(res - result) >= eps;
-            if (!flag) {
+            if (!flag && m) {
                 result = ruleOfRunge(result, res, localN/2, localN, m); // Правило Рунге
             } else {
                 result = res;
@@ -83,8 +82,10 @@ const labFunction = () =>  {
         return sum * (b-a) / 2;
     }
 
-    console.log("Метод трапеций: " + calcIntegral(trapezoidalMethod, 2));
-    console.log("Метод Симпсона: " + calcIntegral(simpsonMethod, 4));
+    console.log("Метод трапеций: " + calcIntegral(trapezoidalMethod));
+    console.log("Метод трапеций (+ правило Рунге): " + calcIntegral(trapezoidalMethod, 2));
+    console.log("Метод Симпсона: " + calcIntegral(simpsonMethod));
+    console.log("Метод Симпсона (+ правило Рунге): " + calcIntegral(simpsonMethod, 4));
     console.log("Метод Гаусса (4): " + gaussMethod(m0,mN, 4));
     console.log("Метод Гаусса (5): " + gaussMethod(m0,mN, 5));
 
